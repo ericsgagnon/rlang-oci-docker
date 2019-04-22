@@ -6,4 +6,5 @@ Multistage docker build extending rocker image with oracle oci
 
     https://github.com/oracle/docker-images/blob/master/OracleInstantClient
 
-2. R: copy OIC (with OCI) from previous stage into rocker/geospatial image
+2. R: copy OIC (with OCI) from previous stage into rocker/geospatial image and set oracle env variables
+3. Install ROracle
