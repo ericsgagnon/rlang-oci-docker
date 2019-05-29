@@ -1,9 +1,10 @@
 # Extends rocker/geospatial with oracle instant client:
 # 1. oracle instant client with oci
 # 2. rocker/geospatial
+# docker build -t ericsgagnon/rlang-oci-docker:r-[rversion]-oci-[oicversion] .
 
-ARG   OIC_VERSION=18.5
-ARG   R_VERSION=3.5.3
+ARG   OIC_VERSION=19.3
+ARG   R_VERSION=3.6.0
 
 # Oracle Instant Client (oci) ########################################################################
 #
@@ -37,7 +38,7 @@ RUN  curl -o /etc/yum.repos.d/public-yum-ol7.repo https://yum.oracle.com/public-
 
 
 
-# Golang ############################################################################################
+# Rlang ############################################################################################
 FROM rocker/geospatial:${R_VERSION} as rlang
 
 ARG  OIC_VERSION
@@ -61,9 +62,20 @@ ENV  LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/oracle/$OIC_VERSION/client64/lib:
 ENV  OCI_LIB=/usr/lib/oracle/$OIC_VERSION/client64/lib
 ENV  OCI_INC=/usr/include/oracle/$OIC_VERSION/client64
 
+ # Install os drivers for common db's
+RUN apt install -y --install-suggests \
+  unixodbc \
+  unixodbc-dev \
+  tdsodbc \
+  odbc-postgresql \
+  libsqliteodbc \
+  mariadb-client \
+  curl \
+  net-tools
+
 RUN  ln -s /lib64 /usr/lib64 && \
      echo /usr/lib/oracle/$OIC_VERSION/client64/lib > /etc/ld.so.conf.d/oracle-instantclient$OIC_VERSION.conf && \
      ldconfig && \
-     R -e "install.packages('ROracle')"
+     R -e "install.packages( c( 'ROracle','odbc','dbplyr', 'dbplot', 'pool', 'mongolite' , 'sparklyr') )"
 
 ENV PATH=$PATH:/usr/lib/oracle/$OIC_VERSION/client64/bin
