@@ -3,8 +3,8 @@
 # 2. rocker/geospatial
 # docker build -t ericsgagnon/rlang-oci-docker:r-[rversion]-oci-[oicversion] .
 
-ARG   OIC_VERSION=19.3
-ARG   R_VERSION=3.6.0
+ARG   OIC_VERSION=19.5
+ARG   R_VERSION=3.6.1
 
 # Oracle Instant Client (oci) ########################################################################
 #
