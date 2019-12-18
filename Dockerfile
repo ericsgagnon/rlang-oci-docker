@@ -4,7 +4,7 @@
 # docker build -t ericsgagnon/rlang-oci-docker:r-[rversion]-oci-[oicversion] .
 
 ARG   OIC_VERSION=19.3
-ARG   R_VERSION=3.6.1
+ARG   R_VERSION=3.6.2
 
 # Oracle Instant Client (oci) ########################################################################
 #
