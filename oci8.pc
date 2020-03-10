@@ -1,8 +1,8 @@
 /usr/lib/pkgconfig/oci8.pc
 prefix=/devel/target/XXXXXXXXXXXXXXXXXXXXXXXXXX
 exec_prefix=${prefix}
-libdir=/usr/lib/oracle/OIC_VERSION/client64/lib
-includedir=/usr/include/oracle/OIC_VERSION/client64
+libdir=/opt/oracle/instantclient
+includedir=/opt/oracle/instantclient/sdk/include
 
 glib_genmarshal=glib-genmarshal
 gobject_query=gobject-query
