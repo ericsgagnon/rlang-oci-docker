@@ -1,4 +1,4 @@
-# docker build -t ericsgagnon/rstudio:v3.6.2 .
+# docker build -t ericsgagnon/rstudio:v3.6.3 .
 # Extends rocker/geospatial with :
 # - mariadb
 # - oracle instantclient
@@ -8,7 +8,7 @@
 # - python (update sym link to 3.7 from rocker/geospatial image)
 
 ARG   OIC_VERSION=19.6
-ARG   R_VERSION=3.6.2
+ARG   R_VERSION=3.6.3
 ARG   GO_VERSION=1.14
 
 # Rlang ############################################################################################
@@ -91,5 +91,5 @@ RUN mkdir -p /etc/skel/R/3.6/lib \
   && sh -c "echo 'export PATH=$PATH' >> /etc/skel/.bashrc "
 
 COPY packages /tmp/packages
-RUN xargs -I {} -a /tmp/packages -0 install2.r --deps TRUE -n 8 {}
+RUN xargs -I {} -s -a /tmp/packages -0 install2.r --deps TRUE -n 8 {}
 
