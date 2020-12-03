@@ -5,3 +5,19 @@
 # from the system, so variable expansion may not work, if you need to
 # inherit specific variables, you can run manually read them from .Rprofile
 # example = '(3x@Mp!e$)'
+
+#including some env vars from docker build process
+OCI_LIB=$OCI_LIB
+R_VERSION=$R_VERSION
+R_MAJOR_MINOR=$R_MAJOR_MINOR
+R_ENVIRON_USER=$R_ENVIRON_USER
+R_PROFILE_USER=$R_PROFILE_USER
+PYTHON_VERSION=$PYTHON_VERSION
+GOLANG_VERSION=$GOLANG_VERSION
+GOPATH=$GOPATH
+GOBIN=$GOBIN
+RUST_VERSION=$RUST_VERSION
+RUSTUP_HOME=$RUSTUP_HOME
+CARGO_HOME=$CARGO_HOME
+ARGO_VERSION=$ARGO_VERSION
+CODE_SERVER_VERSION=$CODE_SERVER_VERSION

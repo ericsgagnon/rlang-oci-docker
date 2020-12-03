@@ -1,5 +1,7 @@
 #!/bin/bash
 
-rsync -v -a --ignore-existing /etc/skel/ ~/
+# this script propagates /etc/skel to user home directories 
+# when logging in. It won't overwrite existing files, but 
+# will replace deleted files if the exist in /etc/skel
 
-r
+rsync -v -a --ignore-existing /etc/skel/ ~/

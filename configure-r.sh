@@ -31,4 +31,5 @@ mkdir -p /etc/skel/.local/share/R/$R_MAJOR_MINOR/lib  \
 # setup login scripts that make sure specific directories and files exist in 
 # each user's home directory
 
-
+# grab all env from dockerfile
+#cat /workspace/Dockerfile | grep  -E "^(ENV)" | sed -r "s/^((ENV)|(ARG)) //g" | sed -r "s/ .*//g" | sed -r "s/=.*//g" | sed -r "s/(.+)/\1=$\1/g"  >> workspace/.env
