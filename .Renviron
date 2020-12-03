@@ -1,0 +1,7 @@
+# this file should be formatted the same as bash environment variables:
+# variablename=variablevalue
+# special characters should be escape with backticks or single quotes
+# note that R (or rstudio?) doesn't seem to inherit environment variables
+# from the system, so variable expansion may not work, if you need to
+# inherit specific variables, you can run manually read them from .Rprofile
+# example = '(3x@Mp!e$)'

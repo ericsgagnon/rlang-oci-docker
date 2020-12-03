@@ -11,7 +11,7 @@ shinydashboard
 flexdashboard
 plotly
 hms
-dygraph
+dygraphs
 correlationfunnel
 GGally
 tidyquant
