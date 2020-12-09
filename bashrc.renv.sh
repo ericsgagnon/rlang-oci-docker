@@ -1,0 +1,18 @@
+
+# make sure os env vars make it to the shell
+# including some env vars from docker build process
+export OCI_LIB=$OCI_LIB
+export R_VERSION=$R_VERSION
+export R_MAJOR_MINOR=$R_MAJOR_MINOR
+export R_ENVIRON_USER=$R_ENVIRON_USER
+export R_PROFILE_USER=$R_PROFILE_USER
+export PYTHON_VERSION=$PYTHON_VERSION
+export GOLANG_VERSION=$GOLANG_VERSION
+export GOPATH=$GOPATH
+export GOBIN=$GOBIN
+export RUST_VERSION=$RUST_VERSION
+export RUSTUP_HOME=$RUSTUP_HOME
+export CARGO_HOME=$CARGO_HOME
+export ARGO_VERSION=$ARGO_VERSION
+export CODE_SERVER_VERSION=$CODE_SERVER_VERSION
+

@@ -92,6 +92,17 @@ RUN apt-get update \
     gprename \
     pax \
     rsync \
+    iputils-ping \
+    netcat \
+    dnsutils \
+    nmap \
+    traceroute \
+    vnstat \
+    iptraf \
+    iftop \
+    slurm \
+    tcpdump \
+    moreutils \
     && rm -rf /var/lib/apt/lists/*
 
 # nss wrapper lets us mount passwd and group files if necessary
@@ -106,7 +117,8 @@ RUN mkdir -p \
     /etc/skel/.local/share \
     /etc/skel/.config      \
     /etc/skel/.cache       \
-    && echo 'export PATH=$PATH' >> /etc/skel/.bashrc
+    && echo 'export PATH=$PATH'           >> /etc/skel/.bashrc \
+    && cat $WORKSPACE/bashrc.env.sh | envsubst >> /etc/skel/.bashrc
 
 COPY skel-rsync.sh /etc/profile.d/
 # Databases ################################################################
@@ -171,7 +183,9 @@ ENV R_ENVIRON_USER=~/.config/R/.Renviron
 ENV R_PROFILE_USER=~/.config/R/.Rprofile
 
 COPY .Rprofile /etc/skel/.config/R/
-COPY .Renviron /etc/skel/.config/R/
+#COPY .Renviron /etc/skel/.config/R/
+COPY .Renviron /etc/R/
+#COPY .Rprofile /etc/R/
 
 RUN mkdir -p /etc/skel/.local/share/R/$R_MAJOR_MINOR/lib  \
     && echo "R_LIBS_USER=${R_LIBS_USER-'~/.local/share/R/"$R_MAJOR_MINOR"/lib'}"    >> /usr/local/lib/R/etc/Renviron \
@@ -200,19 +214,16 @@ COPY --from=python /usr/local/bin/  /usr/local/bin/
 # go ######################################################
 ARG GOLANG_V
 ENV GOLANG_VERSION=$GOLANG_V
-ENV GOPATH '~/.local/share/go'
-ENV GOBIN  '~/.local/bin'
+ENV GOPATH '$HOME/.local/share/go'
+ENV GOBIN  '$HOME/.local/bin'
 ENV PATH $GOBIN:/usr/local/go/bin:$PATH
 
 COPY --from=golang  /usr/local/go /usr/local/go
-
-# unfortunately, R doesn't inherit env vars
-RUN echo    "export GOPATH=${GOPATH}"                  >> /etc/skel/.bashrc \
-    && echo "export GOBIN=${GOBIN}"                    >> /etc/skel/.bashrc \
-    && echo "export GOLANG_VERSION=${GOLANG_VERSION}}" >> /etc/skel/.bashrc \
-    && echo "export GOPATH=${GOPATH}"                  >> /usr/local/lib/R/etc/Renviron \
-    && echo "export GOBIN=${GOBIN}"                    >> /usr/local/lib/R/etc/Renviron \
-    && echo "export GOLANG_VERSION=${GOLANG_VERSION}}" >> /usr/local/lib/R/etc/Renviron
+RUN  mkdir -p \
+    /etc/skel/.local/share/go \
+    /etc/skel/.local/bin/go \
+    && echo 'export GOPATH=$HOME/.local/share/go' >> /etc/skel/.bashrc \
+    && echo 'export GOBIN=$HOME/.local/bin/go'    >> /etc/skel/.bashrc
 
 # rust ####################################################
 ARG RUST_V
@@ -247,25 +258,12 @@ ENV ARGO_VERSION=${ARGO_V}
 ENV PATH=/usr/local/argo/bin:$PATH
 COPY --from=argocli /bin/argo /usr/local/argo/bin/argo
 
-
-# docker build -t ericsgagnon/rstudio:4.0.3 -f Dockerfile .
-# docker run -dit --name devdev -p 8787:8787 -e PASSWORD=password ericsgagnon/rstudio:4.0.3
-
-# # argo workflows
-# RUN cd /tmp && curl -sLO https://github.com/argoproj/argo/releases/download/v2.12.0-rc3/argo-linux-amd64.gz \
-#     && gunzip argo-linux-amd64.gz \
-#     && chmod +x argo-linux-amd64 \
-#     && mv ./argo-linux-amd64 /usr/local/bin/argo \
-#     && argo version
-
-
-
 # code server #############################################
-ARG CODE_SERVER_V
-ENV CODE_SERVER_VERSION=$CODE_SERVER_V
+#ARG CODE_SERVER_V
+#ENV CODE_SERVER_VERSION=$CODE_SERVER_V
 
-RUN chsh -s /bin/bash
-ENV SHELL=/bin/bash
+#RUN chsh -s /bin/bash
+#ENV SHELL=/bin/bash
 
 # RUN adduser --gecos '' --disabled-password coder \
 #     && echo "coder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/nopasswd
@@ -292,4 +290,10 @@ ENV SHELL=/bin/bash
 # WORKDIR /home/coder
 # ENTRYPOINT ["/usr/bin/entrypoint.sh", "--bind-addr", "0.0.0.0:8080", "."]
 
+# R apparently hates the idea of inheriting env vars from the host, using a hack to deal with this
+#RUN cat $WORKSPACE/.Renviron | envsubst > /etc/skel/.config/R/.Renviron
+RUN cat $WORKSPACE/.Renviron | envsubst > /etc/skel/.config/R/.Renviron
 
+
+# docker build -t ericsgagnon/rstudio:4.0.3 -f Dockerfile .
+# docker run -dit --name devdev -p 8787:8787 -e PASSWORD=password ericsgagnon/rstudio:4.0.3
