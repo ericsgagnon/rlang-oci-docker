@@ -18,7 +18,7 @@ ARG RUST_V=1.48
 ARG PYTHON_V=3.9
 ARG CODE_SERVER_V=3.7.4
 ARG ACCEPT_MS_EULA=Y
-ARG ARGO_V=v2.12.0-rc4
+ARG ARGO_V=v2.12.0-rc6
 
 FROM rocker/ml-verse:${R_V}     as rlang
 FROM golang:${GOLANG_V}         as golang
@@ -196,7 +196,8 @@ RUN mkdir -p /etc/skel/.local/share/R/$R_MAJOR_MINOR/lib  \
 
 # commenting during dev to improve build time
 # RUN xargs -I {} -a /tmp/packages -0 install2.r -s --deps TRUE -n 8 {} # not this one - behavior changed when moving to ubuntu
-# RUN head /tmp/packages | tr '\n' ' ' | install2.r -s --deps TRUE -n 8 
+#RUN head -n 2 $WORKSPACE/Rpackages | tr '\n' ' ' | install2.r -s --deps TRUE -n 8 
+RUN install2.r -s --deps TRUE -n 8  $(cat $WORKSPACE/Rpackages | tr '\n' ' ')
 
 # python ##################################################
 ARG PYTHON_V
@@ -294,6 +295,11 @@ COPY --from=argocli /bin/argo /usr/local/argo/bin/argo
 #RUN cat $WORKSPACE/.Renviron | envsubst > /etc/skel/.config/R/.Renviron
 RUN cat $WORKSPACE/.Renviron | envsubst > /etc/skel/.config/R/.Renviron
 
+#RUN head -n 2 $WORKSPACE/Rpackages | tr '\n' ' ' | install2.r -s --deps TRUE -n 8 
+#RUN install2.r -s --deps TRUE -n 8  $(head -n 2 $WORKSPACE/Rpackages | tr '\n' ' ')
+#| install2.r -s --deps TRUE -n 8
+# install2.r -s --deps TRUE -n 8  $(head -n 2 $WORKSPACE/Rpackages | tr '\n' ' ')
 
-# docker build -t ericsgagnon/rstudio:4.0.3 -f Dockerfile .
+# docker build --pull -t ericsgagnon/rstudio:4.0.3 -f Dockerfile .
 # docker run -dit --name devdev -p 8787:8787 -e PASSWORD=password ericsgagnon/rstudio:4.0.3
+
